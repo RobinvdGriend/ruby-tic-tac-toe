@@ -9,9 +9,14 @@ class Player
     @mark = @@player_count == 2 ? :O : :X
   end
 
-  def place_mark(coords, board)
-    tile_index = coords[0] * 3 + coords[1]
-    board.tiles[tile_index] = @mark
+  def place_mark(input, board)
+    coords = input.map { |s| s.to_i - 1 }
+    tile_index = coords[1] * 3 + coords[0]
+    if board.tiles[tile_index] == nil
+      board.tiles[tile_index] = @mark
+    else
+      return false
+    end
   end
 
   def check_won(board)

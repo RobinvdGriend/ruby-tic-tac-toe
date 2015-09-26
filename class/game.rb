@@ -11,8 +11,17 @@ class Game
     @board = create_board
   end
 
+  def restart
+    @board = create_board
+    @players.rewind
+
+    run
+  end
+
   def run
     print_welcome
+
+    turns = 1
     loop do
       print_board
 
@@ -20,15 +29,25 @@ class Game
       input = get_input(current_player)
 
       if EXIT_COMMANDS.include?(input[0])
-        return 0
-      else
-        current_player.place_mark(input, @board)
+        exit
+      end
+
+      until current_player.place_mark(input, @board)
+        puts "This tile has already been marked or you enter invalid values."
+        puts "Please try again"
+        puts ""
+        input = get_input(current_player)
       end
 
       if current_player.check_won(@board)
         print_board
         puts "Congratulations: player #{current_player.id} has won!"
-        return 0
+        return
+      elsif turns == 9
+        puts "It's a tie!"
+        return
+      else
+        turns += 1
       end
     end
   end
@@ -78,6 +97,6 @@ class Game
     puts "Please enter the coordinates of the tile you want to mark (e.g. 2,3)"
     puts "Enter \"quit\" or \"q\" to exit"
     # TODO add error handling
-    gets.chomp.split(/\W+/).map { |s| s.to_i - 1 }
+    gets.chomp.split(/\W+/)
   end
 end
