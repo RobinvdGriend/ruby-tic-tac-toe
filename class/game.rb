@@ -7,8 +7,7 @@ class Game
   EXIT_COMMANDS = ["quit", "q"]
 
   def initialize
-    @player_1 = create_player
-    @player_2 = create_player
+    @players = Array.new(2) { create_player }.cycle #Creates an enumerable
     @board = create_board
   end
 
@@ -17,10 +16,19 @@ class Game
     loop do
       print_board
 
-      input = get_input
+      current_player = @players.next
+      input = get_input(current_player)
 
       if EXIT_COMMANDS.include?(input[0])
-        break
+        return 0
+      else
+        current_player.place_mark(input, @board)
+      end
+
+      if current_player.check_won(@board)
+        print_board
+        puts "Congratulations: player #{current_player.id} has won!"
+        return 0
       end
     end
   end
@@ -43,9 +51,14 @@ class Game
   end
 
   def print_board
-    puts "+---+---+---+"
+    puts "   1   2   3  "
+    puts " +---+---+---+"
+
+    row_num = 0
     @board.tiles.each_slice(3) do |row|
-      print "|"
+      row_num += 1
+      print "#{row_num}|"
+
       row.each do |mark|
         if mark == nil
           print "   |"
@@ -53,15 +66,18 @@ class Game
           print " #{mark} |"
         end
       end
+
       print "\n"
-      puts "+---+---+---+"
+      puts " +---+---+---+"
     end
   end
 
-  def get_input
-    puts "Please enter the coordinates in the field you want to mark (e.g. 2,3)"
+  def get_input(player)
+    puts "It's player #{player.id}'s turn."
+    puts ""
+    puts "Please enter the coordinates of the tile you want to mark (e.g. 2,3)"
     puts "Enter \"quit\" or \"q\" to exit"
     # TODO add error handling
-    gets.chomp.split(/\W+/)
+    gets.chomp.split(/\W+/).map { |s| s.to_i - 1 }
   end
 end

@@ -6,11 +6,12 @@ class Player
     @@player_count ||= 0
     @@player_count += 1
     @id = @@player_count
-    @mark = @@player_count == 1 ? :X : :O
+    @mark = @@player_count == 2 ? :O : :X
   end
 
   def place_mark(coords, board)
-    board.fields[coords[0]][coords[1]] = @mark
+    tile_index = coords[0] * 3 + coords[1]
+    board.tiles[tile_index] = @mark
   end
 
   def check_won(board)
