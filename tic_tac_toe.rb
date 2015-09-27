@@ -2,7 +2,10 @@ require_relative "class/game"
 require_relative "class/player"
 require_relative "class/board"
 
-game = Game.new
+players = Array.new(2) { Player.new }
+board = Board.new
+
+game = Game.new(players: players, board: board)
 game.run
 
 loop do
@@ -11,7 +14,7 @@ loop do
   answer.upcase!
 
   if answer == "Y"
-    game.restart
+    game.restart(Board.new)
   elsif answer == "N"
     exit
   else

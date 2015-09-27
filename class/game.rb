@@ -6,13 +6,13 @@ class Game
           ]
   EXIT_COMMANDS = ["quit", "q"]
 
-  def initialize
-    @players = Array.new(2) { create_player }.cycle #Creates an enumerable
-    @board = create_board
+  def initialize(opts)
+    @players = opts[:players].cycle
+    @board = opts[:board]
   end
 
-  def restart
-    @board = create_board
+  def restart(board)
+    @board = board
     @players.rewind
 
     run
@@ -53,14 +53,6 @@ class Game
   end
 
   private
-
-  def create_player
-    Player.new
-  end
-
-  def create_board
-    Board.new
-  end
 
   def print_welcome
     puts "---------Welcome to Tic Tac Toe!---------"
