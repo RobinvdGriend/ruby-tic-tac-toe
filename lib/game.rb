@@ -4,15 +4,14 @@ class Game
             [0, 3, 6], [1, 4, 7], [2, 5, 8],
             [0, 4, 8], [2, 4, 5]
           ]
-  EXIT_COMMANDS = ["quit", "q"]
 
-  def initialize(opts)
-    @players = opts[:players].cycle
-    @board = opts[:board]
+  def initialize
+    @players = Array.new(2, Player.new(self)).cycle
+    @board = Board.new
   end
 
-  def restart(board)
-    @board = board
+  def restart
+    @board = Board.new
     @players.rewind
 
     run
@@ -26,18 +25,8 @@ class Game
       print_board
 
       current_player = @players.next
-      input = get_input(current_player)
 
-      if EXIT_COMMANDS.include?(input[0])
-        exit
-      end
-
-      until current_player.place_mark(input, @board)
-        puts "This tile has already been marked or you enter invalid values."
-        puts "Please try again"
-        puts ""
-        input = get_input(current_player)
-      end
+      player_tile
 
       if current_player.check_won(@board)
         print_board
@@ -83,12 +72,5 @@ class Game
     end
   end
 
-  def get_input(player)
-    puts "It's player #{player.id}'s turn."
-    puts ""
-    puts "Please enter the coordinates of the tile you want to mark (e.g. 2,3)"
-    puts "Enter \"quit\" or \"q\" to exit"
-    # TODO add error handling
-    gets.chomp.split(/\W+/)
-  end
+
 end

@@ -1,11 +1,8 @@
-require_relative "class/game"
-require_relative "class/player"
-require_relative "class/board"
+require_relative "lib/game"
+require_relative "lib/player"
+require_relative "lib/board"
 
-players = Array.new(2) { Player.new }
-board = Board.new
-
-game = Game.new(players: players, board: board)
+game = Game.new
 game.run
 
 loop do
